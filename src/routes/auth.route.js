@@ -5,6 +5,6 @@ const router=express.Router();
 
 
 router.post("/register",authController.userRegisteration);
-
+router.post("/login",authController.loginUser);
 
 module.exports=router;
