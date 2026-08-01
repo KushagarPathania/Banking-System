@@ -1,5 +1,8 @@
 const userModel=require("../models/user.model");
 const jwt=require("jsonwebtoken");
+const emialService=require("../services/email.service")
+
+
 
 async function userRegisteration(req,res){
     const {email,password,name}=req.body;
@@ -31,6 +34,8 @@ async function userRegisteration(req,res){
         },
         token
     })
+
+    await emialService.sendRegistrationEmail(user.email,user.name);
 
 }
 
