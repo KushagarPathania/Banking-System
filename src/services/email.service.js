@@ -25,11 +25,11 @@ transporter.verify((error, success) => {
 const sendEmail = async (to, subject, text, html) => {
   try {
     const info = await transporter.sendMail({
-      from: `"Your Name" <${process.env.EMAIL_USER}>`, // sender address
-      to, // list of receivers
-      subject, // Subject line
-      text, // plain text body
-      html, // html body
+      from: `"Banking-System" <${process.env.EMAIL_USER}>`, // sender address
+      to, 
+      subject, 
+      text, 
+      html, 
     });
 
     console.log('Message sent: %s', info.messageId);
@@ -41,11 +41,11 @@ const sendEmail = async (to, subject, text, html) => {
 
 async function sendRegistrationEmail(useremail,name) {
     const subject='Welcome to Our Service!';
-    const text=`Hello ${name},\n\nThank you for registering with our service! We're excited to have you on board.\n\nBest regards,\nYour Company Name`;
-    const html=`<p>Hello ${name},</p><p>Thank you for registering with our service! We're excited to have you on board.</p><p>Best regards,<br>Your Company Name</p>`;
+    const text=`Hello ${name},\n\nThank you for registering with our service! We're excited to have you on board.\n\nBest regards,\nBanking - System Team`;
+    const html=`<p>Hello ${name},</p><p>Thank you for registering with our service! We're excited to have you on board.</p><p>Best regards,<br>Banking - System Team</p>`;
     
         await sendEmail(useremail, subject, text, html);
-        
+
     
 }
 
