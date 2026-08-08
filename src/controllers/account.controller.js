@@ -12,6 +12,21 @@ async function createAccount(req,res){
     })
 }
 
+async function getAccounts(req,res){
+    const accounts=await accountModel.find({
+        user:req.user._id
+    })
+    res.status(200).json({
+        accounts
+    })
+}
+
+async function getAccountBalance(req,res){
+
+    
+
+}
+
 module.exports={
-    createAccount
+    createAccount,getAccounts,getAccountBalance
 }
