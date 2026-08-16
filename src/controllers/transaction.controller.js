@@ -34,7 +34,7 @@ async function createTransaction(req,res){
     })
 
     if(isTransactionAlreadyExists){
-        if(isTransactionAlreadyExists.status==="COMPLETED"){
+        if(isTransactionAlreadyExists.status==="SUCCESS"){
             return res.status(200).json({
                 message:"Transaction already completed",
                 transaction:isTransactionAlreadyExists
@@ -74,36 +74,53 @@ async function createTransaction(req,res){
         })
     }
 
+    let transaction;
+    try{
+
     const session=await transactionModel.startSession();
     session.startTransaction();
 
-    const transaction= await transactionModel.create({
+    transaction= (await transactionModel.create([{
         fromAccount,
         toAccount,
         amount,
         idempotencyKey,
         status:"PENDING"
-    },{session})
+    }],{session}))[0]
 
-    const debitLedger=await ledgerModel.create({
+    const debitLedger=await ledgerModel.create([{
         account:fromAccount,
         type:"DEBIT",
         amount:amount,
         transaction:transaction._id
-    },{session})
+    }],{session})
 
-    const creditLedger=await ledgerModel.create({
+    await (() => {
+            return new Promise((resolve) => setTimeout(resolve, 15 * 1000));
+        })()
+
+    const creditLedger=await ledgerModel.create([{
         account:toAccount,
         type:"CREDIT",
         amount:amount,
         transaction:transaction._id
-    },{session})
+    }],{session})
 
-    transaction.status="COMPLETED";
-    await transaction.save({session});
+    await transactionModel.findOneAndUpdate(
+            { _id: transaction._id },
+            { status: "SUCCESS" },
+            { session }
+        )
 
     await session.commitTransaction();
     session.endSession();
+    }catch (error) {
+
+        return res.status(400).json({
+            message: "Transaction is Pending due to some issue, please retry after sometime",
+        })
+
+    }
 
     await emailService.sendTransactionEmail(req.user.email,req.user.name,amount,toAccount);
     return res.status(201).json({
