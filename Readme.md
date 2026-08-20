@@ -2,8 +2,7 @@
 
 A ledger-based banking system: Node.js/Express/MongoDB backend with double-entry transaction logic, paired with a React + Tailwind frontend. Built as a placement-prep portfolio project.
 
-> **Backend repo:** https://github.com/KushagarPathania/Banking-System
-> **Frontend:** included alongside this README (`banking-frontend-react/`)
+
 
 ---
 
